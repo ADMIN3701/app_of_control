@@ -12,7 +12,10 @@ from kivy.uix.label import Label
 from kivy.uix.widget import Widget
 
 from kivy.core.window import Window
-Window.size = (300, 500)
+Window.size = (500, 700)
+
+my_st = "Пример строки Python"
+print(my_st.split()[0])
 
 class MyApp(App):
 
@@ -26,12 +29,12 @@ class MyApp(App):
         bl1 = BoxLayout(orientation="vertical")
         bl2 = BoxLayout(orientation="vertical")
 
-        self.text_input = TextInput(text="192.168.0.167 1234\nВведите ip адрес и порт")
+        self.text_input = TextInput(text="Введите ip адрес и порт")
         self.text_input2 = TextInput(text="Введите команду")
         self.label = Label()
         self.label2 = Label()
 
-        self.label_split = self.label.text.split(" ")
+
         #self.label_split2 = self.label_split.split()
 
         # self.label2.text = "подключение..."
@@ -52,18 +55,24 @@ class MyApp(App):
         return al
 
     def send_command(self, instate):
-        self.label2.text = self.text_input2.text
-        tttt = self.text_input2.text
-        self.client.send(tttt.encode("utf-8"))
-
+        while True:
+            try:
+                self.label2.text = self.text_input2.text
+                tttt = self.text_input2.text
+                self.client.send(tttt.encode("utf-8"))
+            except:
+                self.label2.text = "не удалось отправить сообщение :("
 
     def add_operation(self, instate):
         self.Label_text += str(self.text_input.text) + "\n"
         print(self.text_input.text)
         self.label_update()
 
+        self.text_split = self.text_input.text
+        print(self.text_split.split()[0])
+
         try:
-            self.client.connect(("192.168.0.167", 12341))
+            self.client.connect((str(self.text_split.split()[0]), int(self.text_split.split()[1])))
             self.Label_text += "Подключено!"
         except:
             self.label.text = "Не удалось подключиться :("
